@@ -1,0 +1,62 @@
+<!DOCTYPE patchbay>
+<patchbay name="v3AfterConnectingP5X" version="1.0.4">
+ <items>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="wwm.exe" port="wwm.exe:output_FR"/>
+   <input node="OBS-2" port="OBS:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ" port="ALC892 Analog:capture_FR"/>
+   <input node="OBS-1" port="OBS:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="wwm.exe-1" port="wwm.exe:output_FL"/>
+   <input node="OBS-2" port="OBS:input_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ" port="ALC892 Analog:capture_FL"/>
+   <input node="OBS-1" port="OBS:input_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ [Monitor]" port="ALC892 Analog:monitor_FL"/>
+   <input node="OBS" port="OBS:input_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="P5X.exe" port="P5X.exe:output_FR"/>
+   <input node="OBS-3" port="OBS:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Brave" port="Brave:output_FR"/>
+   <input node="Ryzen HD Audio Controller アナログステレオ" port="ALC892 Analog:playback_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="wwm.exe-1" port="wwm.exe:output_FR"/>
+   <input node="OBS-2" port="OBS:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="P5X.exe" port="P5X.exe:output_FL"/>
+   <input node="OBS-3" port="OBS:input_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Brave" port="Brave:output_FL"/>
+   <input node="Ryzen HD Audio Controller アナログステレオ" port="ALC892 Analog:playback_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ [Monitor]" port="ALC892 Analog:monitor_FL"/>
+   <input node="sunshine" port="sunshine:input_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ [Monitor]" port="ALC892 Analog:monitor_FR"/>
+   <input node="OBS" port="OBS:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller アナログステレオ [Monitor]" port="ALC892 Analog:monitor_FR"/>
+   <input node="sunshine" port="sunshine:input_FR"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="wwm.exe" port="wwm.exe:output_FL"/>
+   <input node="OBS-2" port="OBS:input_FL"/>
+  </item>
+ </items>
+</patchbay>
+

@@ -1,0 +1,4 @@
+These are used in conjunction of a X11's xorg.conf where the virtual displays are defined first.
+You define the virtual displays first in the xorg.conf before using modifying these scripts.
+These scripts are meant to enable the virtual display output upon Sunshine + Moonlight connection then disable them when disconnecting through Sunshine's "prep-commands" options. The prep-commands are fields where you can put something like a terminal command or run a external application when initiating the virtual display outputting and when exiting it.
+X11 and Wayland aren't the same, they are different Desktop Sessions. And Sunshine needs to have a different setting for each of them. This here only works on X11 as that is what I have configured right now, in the past I've made a script to check at login whether the user is in a Wayland or X11 session and swap the configs automatically but until then, I will keep this as is and update it later on.

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seamless CSS Marquee</title>
+    <style>
+        /* Base page resets */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container hides the text that overflows outside the screen boundaries */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            /* background: linear-gradient(90deg, #1f1c2c, #928dab);*/
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+
+        /* The flex track holds both text copies side by side */
+        .marquee-track {
+            display: inline-flex;
+            width: max-content;
+            animation: scroll-marquee 60s linear infinite;
+        }
+
+        /* Styling for the text elements */
+        .marquee-text {
+            font-size: 3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-right: 50px; /* Space between the items */
+        }
+
+        /* Pause the marquee on hover (Optional, remove if unwanted) */
+        .marquee-container:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        /*
+          CLEVER LOOPING EFFECT:
+          Because the track contains two identical items side-by-side,
+          moving it left by exactly 50% lines up the start of the second item
+          with the initial position of the first item perfectly.
+        */
+        @keyframes scroll-marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="marquee-container">
+        <div class="marquee-track">
+            <!-- First Half (Original Text) -->
+            <div class="marquee-text">
+                🚀 Breaking News: CachyOS X11 setup optimization in progress! Year of the Linux indeed! XD Only using X11 because my games run better on DX11 rather than DX12 due to my old GPU being a GTX1070, really want a RTX now! • Custom scrolling marquees look amazing •
+            </div>
+            <!-- Second Half (Identical clone that creates the seamless loop illusion) -->
+            <div class="marquee-text">
+                🚀 Breaking News: CachyOS X11 setup optimization in progress! Year of the Linux indeed! XD Only using X11 because my games run better on DX11 rather than DX12 due to my old GPU being a GTX1070, really want a RTX now! • Custom scrolling marquees look amazing •
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
