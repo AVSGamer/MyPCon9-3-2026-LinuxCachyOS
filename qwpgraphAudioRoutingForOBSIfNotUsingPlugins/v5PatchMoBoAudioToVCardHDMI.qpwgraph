@@ -1,0 +1,14 @@
+<!DOCTYPE patchbay>
+<patchbay name="v5PatchMoBoAudioToVCardHDMI" version="1.0.4">
+ <items>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller Analog Stereo [Monitor]" port="ALC892 Analog:monitor_FL"/>
+   <input node="GP104 High Definition Audio Controller Digital Stereo (HDMI)" port="HDMI 0 *:playback_FL"/>
+  </item>
+  <item node-type="pipewire" port-type="pipewire-audio">
+   <output node="Ryzen HD Audio Controller Analog Stereo [Monitor]" port="ALC892 Analog:monitor_FR"/>
+   <input node="GP104 High Definition Audio Controller Digital Stereo (HDMI)" port="HDMI 0 *:playback_FR"/>
+  </item>
+ </items>
+</patchbay>
+
