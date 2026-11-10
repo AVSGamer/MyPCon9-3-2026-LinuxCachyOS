@@ -30,17 +30,18 @@ sudo nano /etc/systemd/zram-generator.conf
 Use code with caution.
 Paste or modify the configuration to use a multiplier (e.g., ram * 2 for double your physical RAM size):
 [zram0]
-zram-size = ram * 2
+Use code with caution.
+zram-size = ram * ( 2 / 3 )
+zram was x2 of ram before, changed to 2/3 for more stability to prevent crashes/hanging.
 compression-algorithm = zstd
 swap-priority = 100
 fs-type = swap
 
-Use code with caution.
-Save and close the file (Ctrl+O, Enter, then Ctrl+X).
+Save and close the file, if using nano; Ctrl+O, Enter, then Ctrl+X.
 Restart the generator service to apply changes immediately:
+Use code with caution.
 sudo systemctl restart systemd-zram-setup@zram0.service
 
-Use code with caution.
 Option 2: Add a Traditional Backing Swap File (Disk Fallback)
 If you are worried about running completely out of physical memory during heavy workloads (like compilation or intense multitasking) and want an overflow area on your SSD/HDD, you can create a permanent swap file.
 
@@ -72,6 +73,7 @@ You should see zram0 listed with a high priority and, if you chose Option 2, you
 PipeWire Audio Quantization Fix: (You can also use pw-top to check it via terminal then screenshot it to send to AI LLM to assess it.)
 
 Locally to user space:
+Use code with caution.
 mkdir -p ~/.config/pipewire/pipewire.flatpak update
 conf.d/
 nano ~/.config/pipewire/pipewire.conf.d/99-hardware-quant.conf
@@ -85,6 +87,7 @@ context.properties = {
 }
 
 #Restart the service
+Use code with caution.
 systemctl --user restart wireplumber pipewire pipewire-pulse
 
 Global to entire system across users:
@@ -108,6 +111,7 @@ context.properties = {
 }
 
 #Restart the service
+Use code with caution.
 systemctl --user restart wireplumber pipewire pipewire-pulse
 
 System Maintenance via Commandline:
@@ -116,6 +120,7 @@ Ever got stuck in an endless loop of trying to install some packages that should
 Visit the CachyOS Official Website to look for instructions on how to get the official pacman.conf if you need to restore it.
 
 Removing Database(db-lock) locks and updating/upgrade via terminal:
+Use code with caution.
 sudo rm -f /var/lib/pacman/db.lck
 sudo pacman -Scc #This cleans unused ?packages/files?
 sudo pacman -Syyu

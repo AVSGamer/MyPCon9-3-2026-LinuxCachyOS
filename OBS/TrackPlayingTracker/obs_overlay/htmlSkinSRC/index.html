@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notepad Media Overlay</title>
+    <style>
+        /* Import handwritten fonts to match the stick-it note aesthetic */
+        @import url('https://fonts.googleapis.com/css?family=Allura');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            font-family: 'Allura'/*, cursive*/;
+            color: #1a1a1a; /* Ink dark gray/black */
+        }
+
+        /* Container canvas scaled to fit the stick-it artwork cleanly */
+        .notepad-container {
+            position: relative;
+            width: 1000px;
+            height: 560px;
+            background: url('playerSkin.png') no-repeat center center;
+            background-size: contain;
+            transition: opacity 0.5s ease;
+        }
+
+        .notepad-container.hidden {
+            opacity: 0;
+        }
+
+        /* Top metadata header settings */
+        .meta-group {
+            position: absolute;
+            top: 235px;
+            left: 310px;
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            font-size: 26px;
+            line-height: 1.1;
+        }
+
+        .meta-line {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meta-val {
+            font-family: 'Permanent Marker', sans-serif;
+            color: #2b4c7e; /* Blue ink contrast color */
+            font-size: 22px;
+            padding-left: 6px;
+        }
+
+        /* Bottom section designed to encapsulate scrolling lyric content */
+        .lyrics-window {
+            position: absolute;
+            top: 450px;
+            left: 330px;
+            width: 340px;
+            height: 180px; /* Boundaries mapped to match the layout lines */
+            overflow: hidden;
+            font-size: 24px;
+            text-align: center;
+            line-height: 1.3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Moving mechanical scroller block */
+        .lyrics-scroller {
+            position: relative;
+            top: 0px;
+            transition: top 0.4s ease-in-out;
+        }
+
+        .lyric-line {
+            padding: 4px 0;
+            opacity: 0.4;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        /* Focus highlighted line element */
+        .lyric-line.active {
+            opacity: 1;
+            transform: scale(1.1);
+            color: #b32d2d; /* Red marker accent focus */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="widget" class="notepad-container hidden">
+        <!-- Core Player Identification Matrix -->
+        <div class="meta-group">
+            <div class="meta-line">Artist:<span id="artist" class="meta-val">-</span></div>
+            <div class="meta-line">Title:<span id="title" class="meta-val">-</span></div>
+            <div class="meta-line">Album:<span id="album" class="meta-val">-</span></div>
+        </div>
+
+        <!-- Lower Dynamic Scrolling Lyrics Board Window -->
+        <div class="lyrics-window">
+            <div id="scroller" class="lyrics-scroller">
+                <!-- Lines are generated dynamically here by our JS runtime engine -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DATA_FEED = 'current_track.json';
+        let currentRawLyrics = "";
+        let parsedLines = [];
+
+        // Converts standard time blocks [mm:ss.xx] into a single floating decimal value
+        function parseTimestamp(timeStr) {
+            const match = timeStr.match(/\[(\d+):(\d+)\.(\d+)\]/);
+            if (!match) return null;
+            const mins = parseInt(match[1], 10);
+            const secs = parseInt(match[2], 10);
+            const ms = parseInt(match[3], 10);
+            return (mins * 60) + secs + (ms / 100);
+        }
+
+        // Processes continuous lyrics arrays into tracking nodes
+        function loadLyrics(rawString) {
+            currentRawLyrics = rawString;
+            const container = document.getElementById('scroller');
+            container.innerHTML = '';
+            parsedLines = [];
+
+            // If no synced timeline values exist, render standard rolling scroll text layout
+            if (!rawString.includes('[')) {
+                const cleanLines = rawString.split('\\n');
+                cleanLines.forEach(line => {
+                    if(!line.trim()) return;
+                    const el = document.createElement('div');
+                    el.className = 'lyric-line active';
+                    el.textContent = line;
+                    container.appendChild(el);
+                });
+                // Fallback basic scrolling marquee animation parameters
+                container.style.animation = 'marquee 25s linear infinite';
+                return;
+            }
+
+            // Clean continuous animation variables
+            container.style.animation = 'none';
+            const lines = rawString.split('\\n');
+
+            lines.forEach(line => {
+                const match = line.match(/^(\[\d+:\d+\.\d+\])(.*)/);
+                if (match) {
+                    const time = parseTimestamp(match[1]);
+                    const txt = match[2].trim();
+                    if (time !== null && txt) {
+                        parsedLines.push({ time: time, text: txt });
+                    }
+                }
+            });
+
+            // Map standard layout frame items
+            parsedLines.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'lyric-line';
+                div.id = `line-${index}`;
+                div.textContent = item.text;
+                container.appendChild(div);
+            });
+        }
+
+        // Syncs scrolling tracking block with the exact player timestamp progress position
+        function syncLyrics(currentTimeStr) {
+            if (parsedLines.length === 0) return;
+
+            // Convert "mm:ss" format string into raw seconds
+            const parts = currentTimeStr.split(':');
+            if(parts.length !== 2) return;
+            const currentSecs = (parseInt(parts[0], 10) * 60) + parseInt(parts[1], 10);
+
+            // Locate current matching audio tracking frame index block
+            let activeIndex = 0;
+            for (let i = 0; i < parsedLines.length; i++) {
+                if (currentSecs >= parsedLines[i].time) {
+                    activeIndex = i;
+                } else {
+                    break;
+                }
+            }
+
+            // Redraw positions dynamically based on highlighted text changes
+            const scroller = document.getElementById('scroller');
+            const lines = scroller.children;
+
+            for (let i = 0; i < lines.length; i++) {
+                if (i === activeIndex) {
+                    if (!lines[i].classList.contains('active')) {
+                        lines[i].classList.add('active');
+                        // Center active text within our designated note boundaries
+                        const offset = 70 - lines[i].offsetTop;
+                        scroller.style.top = `${offset}px`;
+                    }
+                } else {
+                    lines[i].classList.remove('active');
+                }
+            }
+        }
+
+        async function monitorState() {
+            try {
+                const res = await fetch(DATA_FEED + '?cache=' + new Date().getTime());
+                const data = await res.json();
+                const widget = document.getElementById('widget');
+
+                if (data.playing) {
+                    document.getElementById('title').textContent = data.title;
+                    document.getElementById('artist').textContent = data.artist;
+                    document.getElementById('album').textContent = data.album;
+
+                    const lyricsData = data.syncedLyrics ? data.syncedLyrics : data.plainLyrics;
+                    if (lyricsData !== currentRawLyrics) {
+                        loadLyrics(lyricsData);
+                    }
+
+                    if (data.syncedLyrics) {
+                        syncLyrics(data.time);
+                    }
+
+                    widget.classList.remove('hidden');
+                } else {
+                    widget.classList.add('hidden');
+                }
+            } catch (e) {
+                document.getElementById('widget').classList.add('hidden');
+            }
+        }
+
+        setInterval(monitorState, 1000);
+        monitorState();
+    </script>
+</body>
+</html>
